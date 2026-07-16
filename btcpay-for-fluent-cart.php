@@ -1,0 +1,104 @@
+<?php
+/**
+ * Plugin Name: BTCPay Server for FluentCart
+ * Plugin URI: https://github.com/btc2bgroup/btcpay-fluentcart
+ * Description: Accept Bitcoin and Lightning payments in FluentCart via your self-hosted BTCPay Server - redirect checkout with webhook confirmation.
+ * Version: 1.0.0
+ * Author: BTC2B Group
+ * Author URI: https://btc2bgroup.com
+ * Text Domain: btcpay-for-fluent-cart
+ * Domain Path: /languages
+ * Requires at least: 5.6
+ * Tested up to: 6.9
+ * Requires PHP: 7.4
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+// Prevent direct access
+defined('ABSPATH') || exit('Direct access not allowed.');
+
+// Define plugin constants
+define('BTCPAY_FCT_VERSION', '0.0.1');
+define('BTCPAY_FCT_PLUGIN_FILE', __FILE__);
+define('BTCPAY_FCT_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('BTCPAY_FCT_PLUGIN_URL', plugin_dir_url(__FILE__));
+
+
+function btcpay_fc_check_dependencies() {
+    if (!defined('FLUENTCART_VERSION')) {
+        add_action('admin_notices', function() {
+            ?>
+            <div class="notice notice-error">
+                <p>
+                    <strong><?php esc_html_e('BTCPay Server for FluentCart', 'btcpay-for-fluent-cart'); ?></strong>
+                    <?php esc_html_e('requires FluentCart to be installed and activated.', 'btcpay-for-fluent-cart'); ?>
+                </p>
+            </div>
+            <?php
+        });
+        return false;
+    }
+
+    if (version_compare(FLUENTCART_VERSION, '1.2.5', '<')) {
+        add_action('admin_notices', function() {
+            ?>
+            <div class="notice notice-error">
+                <p>
+                    <strong><?php esc_html_e('BTCPay Server for FluentCart', 'btcpay-for-fluent-cart'); ?></strong>
+                    <?php esc_html_e('requires FluentCart version 1.2.5 or higher', 'btcpay-for-fluent-cart'); ?>
+                </p>
+            </div>
+            <?php
+        });
+        return false;
+    }
+
+    return true;
+}
+
+
+add_action('plugins_loaded', function() {
+    if (!btcpay_fc_check_dependencies()) {
+        return;
+    }
+
+    spl_autoload_register(function ($class) {
+        $prefix = 'BTCPayForFluentCart\\';
+        $base_dir = BTCPAY_FCT_PLUGIN_DIR . 'includes/';
+
+        $len = strlen($prefix);
+        if (strncmp($prefix, $class, $len) !== 0) {
+            return;
+        }
+
+        $relative_class = substr($class, $len);
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        if (file_exists($file)) {
+            require $file;
+        }
+    });
+
+    add_action('fluent_cart/register_payment_methods', function($data) {
+        \BTCPayForFluentCart\BTCPayGateway::register();
+    }, 10);
+
+}, 20);
+
+
+register_activation_hook(__FILE__, 'btcpay_fc_on_activation');
+
+/**
+ * Plugin activation callback
+ */
+function btcpay_fc_on_activation() {
+    if (!btcpay_fc_check_dependencies()) {
+        deactivate_plugins(plugin_basename(__FILE__));
+        wp_die(
+            esc_html__('BTCPay Server for FluentCart requires FluentCart to be installed and activated.', 'btcpay-for-fluent-cart'),
+            esc_html__('Plugin Activation Error', 'btcpay-for-fluent-cart'),
+            ['back_link' => true]
+        );
+    }
+}

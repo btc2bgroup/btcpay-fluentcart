@@ -1,0 +1,15 @@
+{
+    "name": "lightningcheckout/btcpay-for-fluent-cart",
+    "description": "BTCPay Server payment gateway for FluentCart. Composer is used for dev tooling only - the plugin itself has no runtime Composer dependencies.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
