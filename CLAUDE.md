@@ -74,3 +74,6 @@ btcpay-for-fluent-cart/
   plugin zip (only `btcpay-for-fluent-cart.php`, `readme.txt`, `includes/`, `assets/` under a
   top-level `btcpay-for-fluent-cart/` folder), and attaches it to a GitHub Release. Bump all
   three version strings before tagging.
+- Version bump: `bin/bump-version.sh 1.0.1` (or `composer bump -- 1.0.1`) rewrites all three
+  version strings at once and re-checks them with the same patterns the release workflow greps
+  for, so a bad substitution fails locally instead of after the tag is pushed.
