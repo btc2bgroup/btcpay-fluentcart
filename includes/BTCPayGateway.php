@@ -58,12 +58,17 @@ class BTCPayGateway extends AbstractPaymentGateway
     {
         add_filter('fluent_cart/payment_methods/btcpay_settings', [$this, 'getSettings'], 10, 2);
 
-        add_action('fluent_cart/checkout_embed_payment_method_content', [$this, 'renderPaymentContent'], 10, 3);
+        add_action('fluent_cart/checkout_embed_payment_method_content', [$this, 'renderPaymentContent'], 10, 1);
     }
 
-    public function renderPaymentContent($method_name, $order_data, $form_id)
+    /**
+     * FluentCart passes a single context array: ['method' => $gateway, 'cart' => $cart, 'route' => $route]
+     *
+     * @param array $context
+     */
+    public function renderPaymentContent($context = [])
     {
-        if ($method_name !== $this->methodSlug) {
+        if (Arr::get((array) $context, 'route') !== $this->methodSlug) {
             return;
         }
 
