@@ -47,7 +47,7 @@ class BTCPayGateway extends AbstractPaymentGateway
             'description'        => __('Pay with Bitcoin - on-chain or Lightning - via your self-hosted BTCPay Server', 'btcpay-for-fluent-cart'),
             'logo'               => $logo,
             'icon'               => $logo,
-            'brand_color'        => '#51B13E',
+            'brand_color'        => '#F7931A',
             'status'             => $this->settings->get('is_active') === 'yes',
             'upcoming'           => false,
             'supported_features' => $this->supportedFeatures,
