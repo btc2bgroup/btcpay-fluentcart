@@ -78,9 +78,26 @@ namespace FluentCart\Framework\Support {
     }
 }
 
+namespace FluentCart\Api {
+
+    class StoreSettings
+    {
+        /** Injected per test; defaults to a live store. */
+        public static $values = ['order_mode' => 'live'];
+
+        public function get($key = '', $default = null)
+        {
+            if (!$key) {
+                return static::$values;
+            }
+            return static::$values[$key] ?? $default;
+        }
+    }
+}
+
 namespace FluentCart\App\Modules\PaymentMethods\Core {
 
-    class BaseGatewaySettings
+    abstract class BaseGatewaySettings
     {
         /** Injected per test via BTCPayTests\TestCase::setGatewaySettings() */
         public static $testSettings = [];
@@ -93,6 +110,8 @@ namespace FluentCart\App\Modules\PaymentMethods\Core {
         {
             return static::$testSettings;
         }
+
+        abstract public function getMode();
     }
 
     abstract class AbstractPaymentGateway

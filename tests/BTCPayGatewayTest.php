@@ -92,6 +92,18 @@ class BTCPayGatewayTest extends TestCase
         $this->assertTrue($settings->isActive());
     }
 
+    public function test_settings_mode_follows_the_store_mode(): void
+    {
+        $this->setGatewaySettings();
+        \FluentCart\Api\StoreSettings::$values = ['order_mode' => 'test'];
+
+        $this->assertSame('test', (new \BTCPayForFluentCart\Settings\BTCPaySettings())->getMode());
+
+        \FluentCart\Api\StoreSettings::$values = ['order_mode' => 'live'];
+
+        $this->assertSame('live', (new \BTCPayForFluentCart\Settings\BTCPaySettings())->getMode());
+    }
+
     public function test_settings_is_configured_is_false_when_anything_is_missing(): void
     {
         foreach (['host', 'store_id', 'api_key'] as $missingKey) {

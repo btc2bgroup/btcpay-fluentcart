@@ -17,6 +17,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         BaseGatewaySettings::$testSettings = [];
+        \FluentCart\Api\StoreSettings::$values = ['order_mode' => 'live'];
         Order::$records = [];
         OrderTransaction::$records = [];
         StatusHelper::$synced = [];

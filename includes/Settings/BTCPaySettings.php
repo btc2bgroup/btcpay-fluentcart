@@ -8,6 +8,7 @@
 
 namespace BTCPayForFluentCart\Settings;
 
+use FluentCart\Api\StoreSettings;
 use FluentCart\App\Helpers\Helper;
 use FluentCart\App\Modules\PaymentMethods\Core\BaseGatewaySettings;
 
@@ -59,6 +60,16 @@ class BTCPaySettings extends BaseGatewaySettings
             return $this->settings[$key];
         }
         return $settings;
+    }
+
+    /**
+     * BTCPay has no sandbox of its own — we run a single set of credentials
+     * (see CLAUDE.md), so just report the store's own mode for FluentCart's
+     * bookkeeping.
+     */
+    public function getMode()
+    {
+        return (new StoreSettings)->get('order_mode');
     }
 
     public function getHost()
