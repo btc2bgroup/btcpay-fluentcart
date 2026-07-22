@@ -10,6 +10,7 @@
         "phpunit/phpunit": "^11.5"
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "bump": "bin/bump-version.sh"
     }
 }
