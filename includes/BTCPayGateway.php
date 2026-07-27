@@ -103,7 +103,13 @@ class BTCPayGateway extends AbstractPaymentGateway
 
     public function getEnqueueScriptSrc($hasSubscription = 'no'): array
     {
-        return [];
+        return [
+            [
+                'handle'  => 'btcpay-fluent-cart-checkout-handler',
+                'src'     => BTCPAY_FCT_PLUGIN_URL . 'assets/btcpay-checkout.js',
+                'version' => BTCPAY_FCT_VERSION,
+            ]
+        ];
     }
 
     public function getEnqueueStyleSrc(): array
