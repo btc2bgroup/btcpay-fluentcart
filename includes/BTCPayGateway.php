@@ -39,12 +39,13 @@ class BTCPayGateway extends AbstractPaymentGateway
         $logo = BTCPAY_FCT_PLUGIN_URL . 'assets/images/btcpay-logo.svg';
 
         return [
-            'title'              => __('BTCPay Server', 'btcpay-for-fluent-cart'),
+            // Customer-facing naming is "Bitcoin"; only the admin settings screen says BTCPay Server.
+            'title'              => __('Bitcoin', 'btcpay-for-fluent-cart'),
             'route'              => $this->methodSlug,
             'slug'               => $this->methodSlug,
-            'label'              => 'BTCPay Server',
+            'label'              => __('Bitcoin', 'btcpay-for-fluent-cart'),
             'admin_title'        => 'BTCPay Server',
-            'description'        => __('Pay with Bitcoin - on-chain or Lightning - via your self-hosted BTCPay Server', 'btcpay-for-fluent-cart'),
+            'description'        => __('Pay with Bitcoin - on-chain or over the Lightning Network', 'btcpay-for-fluent-cart'),
             'logo'               => $logo,
             'icon'               => $logo,
             'brand_color'        => '#F7931A',
@@ -73,7 +74,7 @@ class BTCPayGateway extends AbstractPaymentGateway
         }
 
         echo '<div class="fluent-cart-btcpay-redirect"><p>'
-            . esc_html__('You will be redirected to BTCPay Server to complete your payment with Bitcoin (on-chain or Lightning).', 'btcpay-for-fluent-cart')
+            . esc_html__('You will be redirected to a secure Bitcoin checkout page to complete your payment (on-chain or Lightning).', 'btcpay-for-fluent-cart')
             . '</p></div>';
     }
 
