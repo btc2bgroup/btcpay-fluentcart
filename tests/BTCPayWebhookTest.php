@@ -3,6 +3,7 @@
 namespace BTCPayTests;
 
 use BTCPayForFluentCart\Webhook\BTCPayWebhook;
+
 use FluentCart\App\Helpers\Status;
 use FluentCart\App\Helpers\StatusHelper;
 
@@ -129,6 +130,7 @@ class BTCPayWebhookTest extends TestCase
         $this->setGatewaySettings();
         $order = $this->makeOrder();
         $transaction = $this->makeTransaction(['vendor_charge_id' => 'INV_abc123']);
+        $this->mockSettledInvoice();
 
         $this->expectResponse(200, function () {
             (new TestableWebhook())->handleInvoiceSettled($this->settledPayload());
@@ -173,6 +175,7 @@ class BTCPayWebhookTest extends TestCase
         $this->makeOrder();
         // vendor_charge_id never stored (e.g. save failed) - only the uuid matches the metadata
         $transaction = $this->makeTransaction(['uuid' => 'trx-hash-def', 'vendor_charge_id' => null]);
+        $this->mockSettledInvoice();
 
         $this->expectResponse(200, function () {
             (new TestableWebhook())->handleInvoiceSettled($this->settledPayload());
@@ -195,6 +198,114 @@ class BTCPayWebhookTest extends TestCase
         });
 
         $this->assertSame('pending', $transaction->status);
+    }
+
+    // --- Invoice verification ------------------------------------------------
+
+    /**
+     * A signed webhook only proves the event came from our BTCPay instance. It
+     * carries no amount, so the invoice itself has to be re-read and checked.
+     */
+    private function expectUnconfirmed(int $statusCode, array $invoice, array $payloadOverrides = []): void
+    {
+        $this->setGatewaySettings();
+        $this->makeOrder();
+        $transaction = $this->makeTransaction(['vendor_charge_id' => 'INV_abc123']);
+
+        if ($invoice) {
+            $this->mockSettledInvoice($invoice);
+        }
+
+        $this->expectResponse($statusCode, function () use ($payloadOverrides) {
+            (new TestableWebhook())->handleInvoiceSettled($this->settledPayload($payloadOverrides));
+        });
+
+        $this->assertSame('pending', $transaction->status, 'Transaction must not be marked paid');
+        $this->assertSame(0, $transaction->saveCount);
+        $this->assertCount(0, StatusHelper::$synced);
+    }
+
+    public function test_invoice_for_a_smaller_amount_does_not_confirm_the_order(): void
+    {
+        // Order is 10.50 USD; a 0.01 invoice was settled instead
+        $this->expectUnconfirmed(409, ['amount' => '0.01']);
+    }
+
+    public function test_invoice_in_another_currency_does_not_confirm_the_order(): void
+    {
+        $this->expectUnconfirmed(409, ['currency' => 'EUR']);
+    }
+
+    public function test_invoice_that_btcpay_does_not_report_as_settled_is_rejected(): void
+    {
+        $this->expectUnconfirmed(409, ['status' => 'Processing']);
+    }
+
+    public function test_invoice_belonging_to_another_store_is_rejected(): void
+    {
+        $this->expectUnconfirmed(409, ['storeId' => 'SOMEONE_ELSES_STORE']);
+    }
+
+    public function test_webhook_claiming_another_store_is_rejected_without_an_api_call(): void
+    {
+        $this->expectUnconfirmed(409, [], ['storeId' => 'SOMEONE_ELSES_STORE']);
+
+        $this->assertSame([], $GLOBALS['btcpay_test_http_requests'], 'Wrong store must be rejected before any API call');
+    }
+
+    public function test_unreachable_btcpay_returns_503_so_the_webhook_is_retried(): void
+    {
+        $this->setGatewaySettings();
+        $this->makeOrder();
+        $transaction = $this->makeTransaction(['vendor_charge_id' => 'INV_abc123']);
+        $this->mockHttpResponse(500, ['message' => 'Server error']);
+
+        // Never guess when the invoice can't be read - 503 asks BTCPay to redeliver
+        $this->expectResponse(503, function () {
+            (new TestableWebhook())->handleInvoiceSettled($this->settledPayload());
+        });
+
+        $this->assertSame('pending', $transaction->status);
+        $this->assertCount(0, StatusHelper::$synced);
+    }
+
+    public function test_amount_is_verified_against_zero_decimal_currencies(): void
+    {
+        $this->setGatewaySettings();
+        $this->makeOrder();
+        $transaction = $this->makeTransaction(['currency' => 'JPY', 'total' => 1050, 'vendor_charge_id' => 'INV_abc123']);
+        $this->mockSettledInvoice(['currency' => 'JPY', 'amount' => '1050']);
+
+        $this->expectResponse(200, function () {
+            (new TestableWebhook())->handleInvoiceSettled($this->settledPayload());
+        });
+
+        $this->assertSame(Status::TRANSACTION_SUCCEEDED, $transaction->status);
+    }
+
+    public function test_verification_reads_the_invoice_from_the_configured_store(): void
+    {
+        $this->setGatewaySettings();
+        $this->makeOrder();
+        $this->makeTransaction(['vendor_charge_id' => 'INV_abc123']);
+        $this->mockSettledInvoice();
+
+        $this->expectResponse(200, function () {
+            (new TestableWebhook())->handleInvoiceSettled($this->settledPayload());
+        });
+
+        $this->assertSame(
+            'https://btcpay.example.com/api/v1/stores/STORE123/invoices/INV_abc123',
+            $this->lastHttpRequest()['url']
+        );
+    }
+
+    public function test_malformed_invoice_ids_are_rejected(): void
+    {
+        $this->assertFalse(BTCPayWebhook::isValidInvoiceId('INV/../../evil'));
+        $this->assertFalse(BTCPayWebhook::isValidInvoiceId('INV abc"onmouseover=1'));
+        $this->assertFalse(BTCPayWebhook::isValidInvoiceId(''));
+        $this->assertTrue(BTCPayWebhook::isValidInvoiceId('INV_abc123'));
     }
 
     // --- InvoiceExpired / InvoiceInvalid -------------------------------------

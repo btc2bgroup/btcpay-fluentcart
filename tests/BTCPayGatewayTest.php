@@ -113,4 +113,59 @@ class BTCPayGatewayTest extends TestCase
             $this->assertFalse($settings->isConfigured(), "isConfigured() should be false without {$missingKey}");
         }
     }
+
+    // --- Settings validation --------------------------------------------------
+
+    private function validate(array $overrides = []): array
+    {
+        return BTCPayGateway::validateSettings(array_merge([
+            'host'     => 'https://btcpay.example.com',
+            'store_id' => 'STORE123',
+            'api_key'  => 'some-api-key',
+        ], $overrides));
+    }
+
+    public function test_valid_https_settings_pass_validation(): void
+    {
+        $this->assertArrayNotHasKey('status', $this->validate());
+    }
+
+    public function test_plain_http_host_is_rejected_so_the_api_key_is_not_sent_in_the_clear(): void
+    {
+        $result = $this->validate(['host' => 'http://btcpay.example.com']);
+
+        $this->assertSame('failed', $result['status']);
+        $this->assertStringContainsString('https://', $result['message']);
+    }
+
+    public function test_http_is_allowed_for_tor_and_loopback_hosts(): void
+    {
+        // Tor encrypts the transport itself; loopback never leaves the machine
+        $this->assertArrayNotHasKey('status', $this->validate(['host' => 'http://abcdef1234567890.onion']));
+        $this->assertArrayNotHasKey('status', $this->validate(['host' => 'http://localhost:23000']));
+        $this->assertArrayNotHasKey('status', $this->validate(['host' => 'http://127.0.0.1:23000']));
+    }
+
+    public function test_non_url_host_is_rejected(): void
+    {
+        $this->assertSame('failed', $this->validate(['host' => 'btcpay.example.com'])['status']);
+        $this->assertSame('failed', $this->validate(['host' => 'not a url'])['status']);
+        $this->assertSame('failed', $this->validate(['host' => ''])['status']);
+    }
+
+    public function test_missing_store_id_or_api_key_is_rejected(): void
+    {
+        $this->assertSame('failed', $this->validate(['store_id' => ''])['status']);
+        $this->assertSame('failed', $this->validate(['api_key' => ''])['status']);
+    }
+
+    public function test_transaction_url_encodes_the_invoice_id_from_the_webhook(): void
+    {
+        $this->setGatewaySettings();
+        $transaction = $this->makeTransaction(['vendor_charge_id' => 'INV/../evil?x=1']);
+
+        $url = (new BTCPayGateway())->getTransactionUrl('', ['transaction' => $transaction]);
+
+        $this->assertSame('https://btcpay.example.com/invoices/INV%2F..%2Fevil%3Fx%3D1', $url);
+    }
 }

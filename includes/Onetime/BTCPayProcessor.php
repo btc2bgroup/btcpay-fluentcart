@@ -54,7 +54,7 @@ class BTCPayProcessor
         $currency = strtoupper($transaction->currency);
 
         $invoiceData = [
-            'amount'   => $this->formatAmount($transaction->total, $currency),
+            'amount'   => self::formatAmount($transaction->total, $currency),
             'currency' => $currency,
             'metadata' => array_filter([
                 'orderId'              => (string)$order->id,
@@ -142,8 +142,11 @@ class BTCPayProcessor
     /**
      * Convert FluentCart's lowest-unit amount to the decimal string
      * BTCPay Server expects (e.g. 1050 -> "10.50" for USD).
+     *
+     * Public/static because the webhook re-derives the same value when it
+     * checks a settled invoice against the order total.
      */
-    private function formatAmount($total, $currency)
+    public static function formatAmount($total, $currency)
     {
         if (in_array($currency, self::ZERO_DECIMAL_CURRENCIES, true)) {
             return (string)(int)$total;
