@@ -141,7 +141,9 @@ class BTCPayGateway extends AbstractPaymentGateway
             return $host;
         }
 
-        return $host . '/invoices/' . $transaction->vendor_charge_id;
+        // The invoice ID reaches us from a webhook payload - never paste it into
+        // an admin-facing URL unencoded.
+        return $host . '/invoices/' . rawurlencode($transaction->vendor_charge_id);
     }
 
     public function getWebhookInstructions(): array
@@ -205,9 +207,70 @@ class BTCPayGateway extends AbstractPaymentGateway
         ];
     }
 
+    /**
+     * FluentCart runs this before storing settings whenever the gateway is
+     * being activated, and shows `message` to the admin when we fail.
+     */
     public static function validateSettings($data): array
     {
+        $host = untrailingslashit(trim((string)Arr::get($data, 'host', '')));
+
+        if (!$host) {
+            return self::settingsError(__('The BTCPay Server Host is required.', 'btcpay-for-fluent-cart'));
+        }
+
+        if (!filter_var($host, FILTER_VALIDATE_URL)) {
+            return self::settingsError(
+                __('The BTCPay Server Host must be a full URL, e.g. https://btcpay.example.com', 'btcpay-for-fluent-cart')
+            );
+        }
+
+        if (!self::isSecureHost($host)) {
+            return self::settingsError(
+                __('The BTCPay Server Host must use https:// - your API key is sent on every request and would otherwise travel in the clear.', 'btcpay-for-fluent-cart')
+            );
+        }
+
+        if (!trim((string)Arr::get($data, 'store_id', ''))) {
+            return self::settingsError(__('The BTCPay Store ID is required.', 'btcpay-for-fluent-cart'));
+        }
+
+        if (!trim((string)Arr::get($data, 'api_key', ''))) {
+            return self::settingsError(__('A BTCPay Greenfield API key is required.', 'btcpay-for-fluent-cart'));
+        }
+
         return $data;
+    }
+
+    /**
+     * https everywhere, with the exception of the two places where plain http
+     * is not actually exposed: a Tor hidden service (encrypted by Tor itself)
+     * and a loopback host (never leaves the machine). Both are normal ways to
+     * run a self-hosted BTCPay instance.
+     */
+    private static function isSecureHost($host): bool
+    {
+        $scheme = strtolower((string)wp_parse_url($host, PHP_URL_SCHEME));
+        $hostname = strtolower((string)wp_parse_url($host, PHP_URL_HOST));
+
+        if ($scheme === 'https') {
+            return true;
+        }
+
+        if ($scheme !== 'http') {
+            return false;
+        }
+
+        return substr($hostname, -6) === '.onion'
+            || in_array($hostname, ['localhost', '127.0.0.1', '::1'], true);
+    }
+
+    private static function settingsError($message): array
+    {
+        return [
+            'status'  => 'failed',
+            'message' => $message,
+        ];
     }
 
     public static function beforeSettingsUpdate($data, $oldSettings): array

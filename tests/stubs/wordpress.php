@@ -76,6 +76,11 @@ function untrailingslashit($string)
     return rtrim($string, '/\\');
 }
 
+function wp_parse_url($url, $component = -1)
+{
+    return parse_url($url, $component);
+}
+
 function site_url($path = '')
 {
     return 'https://shop.example.com/' . ltrim($path, '/');

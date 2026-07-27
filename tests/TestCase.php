@@ -95,6 +95,22 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         };
     }
 
+    /**
+     * Canned GET /invoices/{id} response matching the default transaction
+     * (10.50 USD on STORE123), which the webhook now verifies against.
+     */
+    protected function mockSettledInvoice(array $overrides = []): void
+    {
+        $this->mockHttpResponse(200, array_merge([
+            'id'           => 'INV_abc123',
+            'storeId'      => 'STORE123',
+            'status'       => 'Settled',
+            'amount'       => '10.50',
+            'currency'     => 'USD',
+            'checkoutLink' => 'https://btcpay.example.com/i/INV_abc123',
+        ], $overrides));
+    }
+
     protected function lastHttpRequest(): ?array
     {
         $requests = $GLOBALS['btcpay_test_http_requests'];
