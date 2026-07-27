@@ -31,9 +31,19 @@ class BTCPayProcessor
         $settings = new BTCPaySettings();
 
         if (!$settings->isConfigured()) {
+            fluent_cart_add_log(
+                __('BTCPay Server Not Configured', 'btcpay-for-fluent-cart'),
+                __('BTCPay Server is not configured. Please set the host, Store ID and API key in the payment settings.', 'btcpay-for-fluent-cart'),
+                'error',
+                [
+                    'module_name' => 'order',
+                    'module_id'   => $paymentInstance->order->id
+                ]
+            );
+
             return new \WP_Error(
                 'btcpay_not_configured',
-                __('BTCPay Server is not configured. Please set the host, Store ID and API key in the payment settings.', 'btcpay-for-fluent-cart')
+                __('Bitcoin payments are not available right now. Please choose another payment method or contact the store.', 'btcpay-for-fluent-cart')
             );
         }
 
@@ -77,16 +87,31 @@ class BTCPayProcessor
                 ]
             );
 
-            return $invoice;
+            // The raw BTCPay error stays in the log; the customer sees Bitcoin-only wording.
+            return new \WP_Error(
+                $invoice->get_error_code(),
+                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'btcpay-for-fluent-cart'),
+                ['btcpay_error' => $invoice->get_error_message()]
+            );
         }
 
         $invoiceId = Arr::get($invoice, 'id');
         $checkoutLink = Arr::get($invoice, 'checkoutLink');
 
         if (!$invoiceId || !$checkoutLink) {
+            fluent_cart_add_log(
+                __('BTCPay Invoice Creation Failed', 'btcpay-for-fluent-cart'),
+                __('BTCPay Server returned an unexpected response while creating the invoice.', 'btcpay-for-fluent-cart'),
+                'error',
+                [
+                    'module_name' => 'order',
+                    'module_id'   => $order->id
+                ]
+            );
+
             return new \WP_Error(
                 'btcpay_invalid_response',
-                __('BTCPay Server returned an unexpected response while creating the invoice.', 'btcpay-for-fluent-cart'),
+                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'btcpay-for-fluent-cart'),
                 ['response' => $invoice]
             );
         }
@@ -110,7 +135,7 @@ class BTCPayProcessor
         return [
             'status'      => 'success',
             'redirect_to' => $checkoutLink,
-            'message'     => __('Redirecting to BTCPay Server checkout...', 'btcpay-for-fluent-cart'),
+            'message'     => __('Redirecting to the Bitcoin checkout...', 'btcpay-for-fluent-cart'),
         ];
     }
 

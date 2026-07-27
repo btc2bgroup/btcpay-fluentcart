@@ -157,7 +157,12 @@ class BTCPayProcessorTest extends TestCase
         );
 
         $this->assertInstanceOf(\WP_Error::class, $result);
-        $this->assertSame('Currency FOO is not supported', $result->get_error_message());
+        // Customers only ever see Bitcoin wording; the raw BTCPay message is carried as error data.
+        $this->assertStringContainsString('Bitcoin payment could not be started', $result->get_error_message());
+        $this->assertSame(
+            'Currency FOO is not supported',
+            $result->get_error_data()['btcpay_error'] ?? null
+        );
         $this->assertNull($transaction->vendor_charge_id);
         $this->assertSame(0, $transaction->saveCount);
     }
