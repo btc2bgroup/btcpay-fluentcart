@@ -26,7 +26,7 @@ jobs:
 
       - name: Lint plugin files
         run: |
-          php -l btcpay-for-fluent-cart.php
+          php -l bitcoin-payments-for-fluentcart.php
           find includes -name '*.php' -print0 | xargs -0 -n1 php -l
 
   phpunit:

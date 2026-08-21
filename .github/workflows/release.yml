@@ -26,8 +26,8 @@ jobs:
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           echo "Tag version: $TAG_VERSION"
 
-          HEADER_VERSION=$(grep -oP '^\s*\*\s*Version:\s*\K[0-9.]+' btcpay-for-fluent-cart.php)
-          CONST_VERSION=$(grep -oP "define\('BTCPAY_FCT_VERSION',\s*'\K[0-9.]+" btcpay-for-fluent-cart.php)
+          HEADER_VERSION=$(grep -oP '^\s*\*\s*Version:\s*\K[0-9.]+' bitcoin-payments-for-fluentcart.php)
+          CONST_VERSION=$(grep -oP "define\('BTCPAY_FCT_VERSION',\s*'\K[0-9.]+" bitcoin-payments-for-fluentcart.php)
           STABLE_TAG=$(grep -oP '^Stable tag:\s*\K[0-9.]+' readme.txt)
 
           echo "Plugin header: $HEADER_VERSION, constant: $CONST_VERSION, readme stable tag: $STABLE_TAG"
@@ -45,12 +45,12 @@ jobs:
       - name: Build plugin zip
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          mkdir -p dist/btcpay-for-fluent-cart
-          cp btcpay-for-fluent-cart.php readme.txt dist/btcpay-for-fluent-cart/
-          cp -R includes assets dist/btcpay-for-fluent-cart/
+          mkdir -p dist/bitcoin-payments-for-fluentcart
+          cp bitcoin-payments-for-fluentcart.php readme.txt dist/bitcoin-payments-for-fluentcart/
+          cp -R includes assets dist/bitcoin-payments-for-fluentcart/
           cd dist
-          zip -rq "btcpay-for-fluent-cart-${TAG_VERSION}.zip" btcpay-for-fluent-cart
-          unzip -l "btcpay-for-fluent-cart-${TAG_VERSION}.zip"
+          zip -rq "bitcoin-payments-for-fluentcart-${TAG_VERSION}.zip" bitcoin-payments-for-fluentcart
+          unzip -l "bitcoin-payments-for-fluentcart-${TAG_VERSION}.zip"
 
       - name: Create GitHub release
         env:
@@ -58,6 +58,6 @@ jobs:
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
-            "dist/btcpay-for-fluent-cart-${TAG_VERSION}.zip" \
-            --title "BTCPay Server for FluentCart ${TAG_VERSION}" \
+            "dist/bitcoin-payments-for-fluentcart-${TAG_VERSION}.zip" \
+            --title "Bitcoin and Lightning Payments for FluentCart ${TAG_VERSION}" \
             --generate-notes

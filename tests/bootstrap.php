@@ -4,9 +4,9 @@ require __DIR__ . '/../vendor/autoload.php';
 
 define('ABSPATH', sys_get_temp_dir() . '/wordpress/');
 define('BTCPAY_FCT_VERSION', '1.0.0');
-define('BTCPAY_FCT_PLUGIN_FILE', dirname(__DIR__) . '/btcpay-for-fluent-cart.php');
+define('BTCPAY_FCT_PLUGIN_FILE', dirname(__DIR__) . '/bitcoin-payments-for-fluentcart.php');
 define('BTCPAY_FCT_PLUGIN_DIR', dirname(__DIR__) . '/');
-define('BTCPAY_FCT_PLUGIN_URL', 'https://shop.example.com/wp-content/plugins/btcpay-for-fluent-cart/');
+define('BTCPAY_FCT_PLUGIN_URL', 'https://shop.example.com/wp-content/plugins/bitcoin-payments-for-fluentcart/');
 
 require __DIR__ . '/stubs/wordpress.php';
 require __DIR__ . '/stubs/fluentcart.php';

@@ -1,5 +1,5 @@
 {
-    "name": "btc2bgroup/btcpay-for-fluent-cart",
+    "name": "btc2bgroup/bitcoin-payments-for-fluentcart",
     "description": "BTCPay Server payment gateway for FluentCart. Composer is used for dev tooling only - the plugin itself has no runtime Composer dependencies.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",

@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: BTCPay Server for FluentCart
+ * Plugin Name: Bitcoin and Lightning Payments for FluentCart
  * Plugin URI: https://github.com/btc2bgroup/btcpay-fluentcart
  * Description: Accept Bitcoin and Lightning payments in FluentCart via your self-hosted BTCPay Server - redirect checkout with webhook confirmation.
  * Version: 0.0.7
  * Author: BTC2B Group
  * Author URI: https://btc2bgroup.com
- * Text Domain: btcpay-for-fluent-cart
+ * Text Domain: bitcoin-payments-for-fluentcart
  * Domain Path: /languages
  * Requires at least: 5.6
  * Tested up to: 6.9
@@ -31,8 +31,8 @@ function btcpay_fc_check_dependencies() {
             ?>
             <div class="notice notice-error">
                 <p>
-                    <strong><?php esc_html_e('BTCPay Server for FluentCart', 'btcpay-for-fluent-cart'); ?></strong>
-                    <?php esc_html_e('requires FluentCart to be installed and activated.', 'btcpay-for-fluent-cart'); ?>
+                    <strong><?php esc_html_e('Bitcoin and Lightning Payments for FluentCart', 'bitcoin-payments-for-fluentcart'); ?></strong>
+                    <?php esc_html_e('requires FluentCart to be installed and activated.', 'bitcoin-payments-for-fluentcart'); ?>
                 </p>
             </div>
             <?php
@@ -45,8 +45,8 @@ function btcpay_fc_check_dependencies() {
             ?>
             <div class="notice notice-error">
                 <p>
-                    <strong><?php esc_html_e('BTCPay Server for FluentCart', 'btcpay-for-fluent-cart'); ?></strong>
-                    <?php esc_html_e('requires FluentCart version 1.2.5 or higher', 'btcpay-for-fluent-cart'); ?>
+                    <strong><?php esc_html_e('Bitcoin and Lightning Payments for FluentCart', 'bitcoin-payments-for-fluentcart'); ?></strong>
+                    <?php esc_html_e('requires FluentCart version 1.2.5 or higher', 'bitcoin-payments-for-fluentcart'); ?>
                 </p>
             </div>
             <?php
@@ -96,8 +96,8 @@ function btcpay_fc_on_activation() {
     if (!btcpay_fc_check_dependencies()) {
         deactivate_plugins(plugin_basename(__FILE__));
         wp_die(
-            esc_html__('BTCPay Server for FluentCart requires FluentCart to be installed and activated.', 'btcpay-for-fluent-cart'),
-            esc_html__('Plugin Activation Error', 'btcpay-for-fluent-cart'),
+            esc_html__('Bitcoin and Lightning Payments for FluentCart requires FluentCart to be installed and activated.', 'bitcoin-payments-for-fluentcart'),
+            esc_html__('Plugin Activation Error', 'bitcoin-payments-for-fluentcart'),
             ['back_link' => true]
         );
     }
