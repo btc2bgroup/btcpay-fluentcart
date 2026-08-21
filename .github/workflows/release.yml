@@ -46,7 +46,7 @@ jobs:
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           mkdir -p dist/bitcoin-payments-for-fluentcart
-          cp bitcoin-payments-for-fluentcart.php readme.txt dist/bitcoin-payments-for-fluentcart/
+          cp bitcoin-payments-for-fluentcart.php readme.txt LICENSE dist/bitcoin-payments-for-fluentcart/
           cp -R includes assets dist/bitcoin-payments-for-fluentcart/
           cd dist
           zip -rq "bitcoin-payments-for-fluentcart-${TAG_VERSION}.zip" bitcoin-payments-for-fluentcart

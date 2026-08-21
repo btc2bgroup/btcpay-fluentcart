@@ -71,7 +71,7 @@ bitcoin-payments-for-fluentcart/
 - Release: push a `v*` tag (e.g. `git tag v1.0.1 && git push origin v1.0.1`) —
   `.github/workflows/release.yml` verifies the tag matches the plugin header version,
   `BTCPAY_FCT_VERSION`, and readme.txt `Stable tag`, runs the tests, builds an installable
-  plugin zip (only `bitcoin-payments-for-fluentcart.php`, `readme.txt`, `includes/`, `assets/` under a
+  plugin zip (only `bitcoin-payments-for-fluentcart.php`, `readme.txt`, `LICENSE`, `includes/`, `assets/` under a
   top-level `bitcoin-payments-for-fluentcart/` folder), and attaches it to a GitHub Release. Bump all
   version strings before tagging.
 - Version bump: `bin/bump-version.sh 1.0.1` (or `composer bump -- 1.0.1`) rewrites the plugin

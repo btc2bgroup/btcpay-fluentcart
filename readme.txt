@@ -145,3 +145,4 @@ attempts and their responses.
 
 = 0.0.11 =
 * First submitted version after testing.
+* Added the full GPLv2 license text and copyright notice.
