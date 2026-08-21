@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, btcpay, payment gateway, fluentcart
 Requires at least: 5.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 0.0.7
+Stable tag: 0.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,9 +143,14 @@ attempts and their responses.
 
 == Changelog ==
 
+= 0.0.9 =
+* Renamed to "Bitcoin and Lightning Payments for FluentCart" for the WordPress.org directory.
+  The plugin folder and main file are now `bitcoin-payments-for-fluentcart`.
+* Added an "External services" section documenting exactly what is sent to your BTCPay Server.
+* Expanded the readme with requirements and troubleshooting entries.
+
 = 0.0.7 =
 * Security fixes.
-* Renamed to "Bitcoin and Lightning Payments for FluentCart" for the WordPress.org directory.
 
 = 0.0.6 =
 * Enable the Place order button when Bitcoin is the only available payment method.
@@ -158,6 +163,11 @@ attempts and their responses.
   BTCPay-Sig HMAC verification, one-time payments.
 
 == Upgrade Notice ==
+
+= 0.0.9 =
+The plugin has been renamed and its folder is now bitcoin-payments-for-fluentcart. If you
+installed it manually from a zip, deactivate and delete the old copy before installing this
+one, then check your BTCPay settings are still in place.
 
 = 0.0.7 =
 Security fixes - update recommended.
