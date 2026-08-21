@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, btcpay, payment gateway, fluentcart
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.0.11
+Stable tag: 0.0.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,6 +143,6 @@ attempts and their responses.
 
 == Changelog ==
 
-= 0.0.11 =
+= 0.0.12 =
 * First submitted version after testing.
 * Added the full GPLv2 license text and copyright notice.

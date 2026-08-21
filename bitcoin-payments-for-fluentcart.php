@@ -3,7 +3,7 @@
  * Plugin Name: Bitcoin and Lightning Payments for FluentCart
  * Plugin URI: https://github.com/btc2bgroup/btcpay-fluentcart
  * Description: Accept Bitcoin and Lightning payments in FluentCart via your self-hosted BTCPay Server - redirect checkout with webhook confirmation.
- * Version: 0.0.11
+ * Version: 0.0.12
  * Author: BTC2B Group
  * Author URI: https://btc2bgroup.com
  * Text Domain: bitcoin-payments-for-fluentcart
@@ -32,7 +32,7 @@
 defined('ABSPATH') || exit('Direct access not allowed.');
 
 // Define plugin constants
-define('BTCPAY_FCT_VERSION', '0.0.11');
+define('BTCPAY_FCT_VERSION', '0.0.12');
 define('BTCPAY_FCT_PLUGIN_FILE', __FILE__);
 define('BTCPAY_FCT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BTCPAY_FCT_PLUGIN_URL', plugin_dir_url(__FILE__));
