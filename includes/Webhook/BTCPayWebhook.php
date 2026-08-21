@@ -155,7 +155,7 @@ class BTCPayWebhook
 
         if (is_wp_error($verification)) {
             fluent_cart_add_log(
-                __('BTCPay Invoice Verification Failed', 'btcpay-for-fluent-cart'),
+                __('BTCPay Invoice Verification Failed', 'bitcoin-payments-for-fluentcart'),
                 $verification->get_error_message(),
                 'error',
                 [
@@ -189,8 +189,8 @@ class BTCPayWebhook
         $transactionModel->save();
 
         fluent_cart_add_log(
-            __('BTCPay Payment Settled', 'btcpay-for-fluent-cart'),
-            __('Payment confirmation received from BTCPay Server. Invoice ID:', 'btcpay-for-fluent-cart') . ' ' . $invoiceId,
+            __('BTCPay Payment Settled', 'bitcoin-payments-for-fluentcart'),
+            __('Payment confirmation received from BTCPay Server. Invoice ID:', 'bitcoin-payments-for-fluentcart') . ' ' . $invoiceId,
             'info',
             [
                 'module_name' => 'order',
@@ -244,10 +244,10 @@ class BTCPayWebhook
         $transactionModel->save();
 
         fluent_cart_add_log(
-            __('BTCPay Invoice Failed', 'btcpay-for-fluent-cart'),
+            __('BTCPay Invoice Failed', 'bitcoin-payments-for-fluentcart'),
             sprintf(
                 /* translators: 1: BTCPay event type, 2: BTCPay invoice ID */
-                __('BTCPay invoice %2$s reported %1$s - transaction marked as failed.', 'btcpay-for-fluent-cart'),
+                __('BTCPay invoice %2$s reported %1$s - transaction marked as failed.', 'bitcoin-payments-for-fluentcart'),
                 $type,
                 $invoiceId
             ),

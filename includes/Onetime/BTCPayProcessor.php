@@ -32,8 +32,8 @@ class BTCPayProcessor
 
         if (!$settings->isConfigured()) {
             fluent_cart_add_log(
-                __('BTCPay Server Not Configured', 'btcpay-for-fluent-cart'),
-                __('BTCPay Server is not configured. Please set the host, Store ID and API key in the payment settings.', 'btcpay-for-fluent-cart'),
+                __('BTCPay Server Not Configured', 'bitcoin-payments-for-fluentcart'),
+                __('BTCPay Server is not configured. Please set the host, Store ID and API key in the payment settings.', 'bitcoin-payments-for-fluentcart'),
                 'error',
                 [
                     'module_name' => 'order',
@@ -43,7 +43,7 @@ class BTCPayProcessor
 
             return new \WP_Error(
                 'btcpay_not_configured',
-                __('Bitcoin payments are not available right now. Please choose another payment method or contact the store.', 'btcpay-for-fluent-cart')
+                __('Bitcoin payments are not available right now. Please choose another payment method or contact the store.', 'bitcoin-payments-for-fluentcart')
             );
         }
 
@@ -78,7 +78,7 @@ class BTCPayProcessor
 
         if (is_wp_error($invoice)) {
             fluent_cart_add_log(
-                __('BTCPay Invoice Creation Failed', 'btcpay-for-fluent-cart'),
+                __('BTCPay Invoice Creation Failed', 'bitcoin-payments-for-fluentcart'),
                 $invoice->get_error_message(),
                 'error',
                 [
@@ -90,7 +90,7 @@ class BTCPayProcessor
             // The raw BTCPay error stays in the log; the customer sees Bitcoin-only wording.
             return new \WP_Error(
                 $invoice->get_error_code(),
-                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'btcpay-for-fluent-cart'),
+                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'bitcoin-payments-for-fluentcart'),
                 ['btcpay_error' => $invoice->get_error_message()]
             );
         }
@@ -100,8 +100,8 @@ class BTCPayProcessor
 
         if (!$invoiceId || !$checkoutLink) {
             fluent_cart_add_log(
-                __('BTCPay Invoice Creation Failed', 'btcpay-for-fluent-cart'),
-                __('BTCPay Server returned an unexpected response while creating the invoice.', 'btcpay-for-fluent-cart'),
+                __('BTCPay Invoice Creation Failed', 'bitcoin-payments-for-fluentcart'),
+                __('BTCPay Server returned an unexpected response while creating the invoice.', 'bitcoin-payments-for-fluentcart'),
                 'error',
                 [
                     'module_name' => 'order',
@@ -111,7 +111,7 @@ class BTCPayProcessor
 
             return new \WP_Error(
                 'btcpay_invalid_response',
-                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'btcpay-for-fluent-cart'),
+                __('The Bitcoin payment could not be started. Please try again or choose another payment method.', 'bitcoin-payments-for-fluentcart'),
                 ['response' => $invoice]
             );
         }
@@ -123,8 +123,8 @@ class BTCPayProcessor
         $transaction->save();
 
         fluent_cart_add_log(
-            __('BTCPay Invoice Created', 'btcpay-for-fluent-cart'),
-            __('BTCPay invoice created. Invoice ID:', 'btcpay-for-fluent-cart') . ' ' . $invoiceId,
+            __('BTCPay Invoice Created', 'bitcoin-payments-for-fluentcart'),
+            __('BTCPay invoice created. Invoice ID:', 'bitcoin-payments-for-fluentcart') . ' ' . $invoiceId,
             'info',
             [
                 'module_name' => 'order',
@@ -135,7 +135,7 @@ class BTCPayProcessor
         return [
             'status'      => 'success',
             'redirect_to' => $checkoutLink,
-            'message'     => __('Redirecting to the Bitcoin checkout...', 'btcpay-for-fluent-cart'),
+            'message'     => __('Redirecting to the Bitcoin checkout...', 'bitcoin-payments-for-fluentcart'),
         ];
     }
 

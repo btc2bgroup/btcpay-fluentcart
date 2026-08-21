@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # Bump the plugin version in all three places the release workflow checks:
-#   - btcpay-for-fluent-cart.php  plugin header "Version:"
-#   - btcpay-for-fluent-cart.php  BTCPAY_FCT_VERSION constant
-#   - README.md                   "Stable tag:"
-#   - SECURITY.md                 "Supported versions" table rows
+#   - bitcoin-payments-for-fluentcart.php  plugin header "Version:"
+#   - bitcoin-payments-for-fluentcart.php  BTCPAY_FCT_VERSION constant
+#   - readme.txt                           "Stable tag:"
+#   - SECURITY.md                          "Supported versions" table rows
 #
 # Usage: bin/bump-version.sh 1.0.1 [--tag]
 #
@@ -49,8 +49,8 @@ if ! printf '%s' "$NEW_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
     exit 1
 fi
 
-PLUGIN_FILE="btcpay-for-fluent-cart.php"
-README_FILE="README.md"
+PLUGIN_FILE="bitcoin-payments-for-fluentcart.php"
+README_FILE="readme.txt"
 SECURITY_FILE="SECURITY.md"
 TAG="v${NEW_VERSION}"
 
@@ -80,16 +80,20 @@ fi
 OLD_VERSION=$(sed -n "s/^define('BTCPAY_FCT_VERSION', '\([0-9.]*\)').*/\1/p" "$PLUGIN_FILE")
 
 # BSD (macOS) and GNU sed disagree about -i, so write via a temp file instead.
+# Write *into* the original file rather than mv'ing the temp over it - mktemp
+# creates 0600 files, and a mv would leave the plugin files unreadable to the
+# web server.
 replace() {
     local pattern="$1" file="$2" tmp
     tmp=$(mktemp)
     sed "$pattern" "$file" > "$tmp"
-    mv "$tmp" "$file"
+    cat "$tmp" > "$file"
+    rm -f "$tmp"
 }
 
 replace "s/^\( \* Version: *\)[0-9.]*$/\1${NEW_VERSION}/" "$PLUGIN_FILE"
 replace "s/^\(define('BTCPAY_FCT_VERSION', '\)[0-9.]*\(');\)/\1${NEW_VERSION}\2/" "$PLUGIN_FILE"
-replace "s/^\(- \*\*Stable tag: *\)[0-9.]*\(\*\*\)$/\1${NEW_VERSION}\2/" "$README_FILE"
+replace "s/^\(Stable tag: *\)[0-9.]*$/\1${NEW_VERSION}/" "$README_FILE"
 
 # SECURITY.md's supported-versions table: the new version is the only supported
 # one, everything below it is not. Pad the version column so the table stays
@@ -110,7 +114,7 @@ replace "s#^| < [0-9][0-9.]* *|\( *❌.*\)#| ${UNSUPPORTED_COL} |\1#" "$SECURITY
 # substitution fails here instead of in CI after the tag is pushed.
 HEADER_VERSION=$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*\([0-9.]*\)/\1/p' "$PLUGIN_FILE")
 CONST_VERSION=$(sed -n "s/^define('BTCPAY_FCT_VERSION', '\([0-9.]*\)').*/\1/p" "$PLUGIN_FILE")
-STABLE_TAG=$(sed -n 's/^- \*\*Stable tag:[[:space:]]*\([0-9.]*\)\*\*/\1/p' "$README_FILE")
+STABLE_TAG=$(sed -n 's/^Stable tag:[[:space:]]*\([0-9.]*\)/\1/p' "$README_FILE")
 SUPPORTED=$(sed -n 's#^| \([0-9][0-9.]*\)[[:space:]]*|[[:space:]]*✅.*#\1#p' "$SECURITY_FILE")
 UNSUPPORTED=$(sed -n 's#^| < \([0-9][0-9.]*\)[[:space:]]*|[[:space:]]*❌.*#\1#p' "$SECURITY_FILE")
 

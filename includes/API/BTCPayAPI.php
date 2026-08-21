@@ -51,7 +51,7 @@ class BTCPayAPI
         if (!$host || !$apiKey) {
             return new \WP_Error(
                 'btcpay_not_configured',
-                __('BTCPay Server host or API key is not configured.', 'btcpay-for-fluent-cart')
+                __('BTCPay Server host or API key is not configured.', 'bitcoin-payments-for-fluentcart')
             );
         }
 
@@ -116,7 +116,7 @@ class BTCPayAPI
         if (!$storeId) {
             return new \WP_Error(
                 'btcpay_not_configured',
-                __('BTCPay Server Store ID is not configured.', 'btcpay-for-fluent-cart')
+                __('BTCPay Server Store ID is not configured.', 'bitcoin-payments-for-fluentcart')
             );
         }
 
@@ -135,7 +135,7 @@ class BTCPayAPI
         if (!$storeId || !$invoiceId) {
             return new \WP_Error(
                 'btcpay_not_configured',
-                __('BTCPay Server Store ID or invoice ID is missing.', 'btcpay-for-fluent-cart')
+                __('BTCPay Server Store ID or invoice ID is missing.', 'bitcoin-payments-for-fluentcart')
             );
         }
 

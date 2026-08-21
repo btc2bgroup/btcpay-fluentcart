@@ -3,7 +3,7 @@
 Guidance for Claude Code when working in this repository.
 
 ## Project
-WordPress plugin `btcpay-for-fluent-cart`: adds BTCPay Server (self-hosted Bitcoin/Lightning
+WordPress plugin `bitcoin-payments-for-fluentcart`: adds BTCPay Server (self-hosted Bitcoin/Lightning
 payment processor) as a payment gateway inside FluentCart. Redirect-style checkout — customer
 is sent to a BTCPay-hosted invoice page, pays, BTCPay fires a webhook, FluentCart order is
 marked paid.
@@ -26,8 +26,8 @@ fetch and check the actual docs/example repo before implementing.
 
 ## Architecture
 ```
-btcpay-for-fluent-cart/
-├── btcpay-for-fluent-cart.php     # bootstrap, registers gateway on fluent_cart/register_payment_methods
+bitcoin-payments-for-fluentcart/
+├── bitcoin-payments-for-fluentcart.php     # bootstrap, registers gateway on fluent_cart/register_payment_methods
 ├── includes/
 │   ├── BTCPayGateway.php          # extends AbstractPaymentGateway, implements PaymentGatewayInterface
 │   ├── API/BTCPayAPI.php          # wp_remote_post/get wrapper around Greenfield REST calls (no SDK/Composer dep)
@@ -70,10 +70,23 @@ btcpay-for-fluent-cart/
   PHP 7.4 + 8.4 and runs PHPUnit on PHP 8.3 + 8.4.
 - Release: push a `v*` tag (e.g. `git tag v1.0.1 && git push origin v1.0.1`) —
   `.github/workflows/release.yml` verifies the tag matches the plugin header version,
-  `BTCPAY_FCT_VERSION`, and README.md `Stable tag`, runs the tests, builds an installable
-  plugin zip (only `btcpay-for-fluent-cart.php`, `README.md`, `includes/`, `assets/` under a
-  top-level `btcpay-for-fluent-cart/` folder), and attaches it to a GitHub Release. Bump all
-  three version strings before tagging.
-- Version bump: `bin/bump-version.sh 1.0.1` (or `composer bump -- 1.0.1`) rewrites all three
-  version strings at once and re-checks them with the same patterns the release workflow greps
-  for, so a bad substitution fails locally instead of after the tag is pushed.
+  `BTCPAY_FCT_VERSION`, and readme.txt `Stable tag`, runs the tests, builds an installable
+  plugin zip (only `bitcoin-payments-for-fluentcart.php`, `readme.txt`, `includes/`, `assets/` under a
+  top-level `bitcoin-payments-for-fluentcart/` folder), and attaches it to a GitHub Release. Bump all
+  version strings before tagging.
+- Version bump: `bin/bump-version.sh 1.0.1` (or `composer bump -- 1.0.1`) rewrites the plugin
+  header, `BTCPAY_FCT_VERSION`, readme.txt `Stable tag` and the SECURITY.md supported-versions
+  table at once, then re-checks them with the same patterns the release workflow greps for, so a
+  bad substitution fails locally instead of after the tag is pushed. Add `--tag` to also commit
+  the bump and create the `v<version>` tag (it refuses on a dirty tree or an existing tag, and
+  never pushes).
+- Changelog: readme.txt is the WordPress.org-facing readme — the directory parses it and ignores
+  README.md, so there is no README.md. Add a `== Changelog ==` entry (and `== Upgrade Notice ==`
+  when relevant) by hand when releasing; the bump script does not write those.
+
+## WordPress.org naming (don't rename without checking guideline 17)
+The plugin slug/name deliberately does **not** start with "BTCPay" — the directory forbids a
+third-party project name as the initial term of a slug. Public name is "Bitcoin and Lightning
+Payments for FluentCart", slug/text domain `bitcoin-payments-for-fluentcart`. BTCPay Server is
+referenced freely in descriptions and body text, just never as the leading term. The text domain
+must always equal the slug. Internal PHP prefixes (`BTCPAY_FCT_`, `btcpay_fc_`) are unaffected.

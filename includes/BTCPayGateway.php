@@ -40,12 +40,12 @@ class BTCPayGateway extends AbstractPaymentGateway
 
         return [
             // Customer-facing naming is "Bitcoin"; only the admin settings screen says BTCPay Server.
-            'title'              => __('Bitcoin', 'btcpay-for-fluent-cart'),
+            'title'              => __('Bitcoin', 'bitcoin-payments-for-fluentcart'),
             'route'              => $this->methodSlug,
             'slug'               => $this->methodSlug,
-            'label'              => __('Bitcoin', 'btcpay-for-fluent-cart'),
+            'label'              => __('Bitcoin', 'bitcoin-payments-for-fluentcart'),
             'admin_title'        => 'BTCPay Server',
-            'description'        => __('Pay with Bitcoin - on-chain or over the Lightning Network', 'btcpay-for-fluent-cart'),
+            'description'        => __('Pay with Bitcoin - on-chain or over the Lightning Network', 'bitcoin-payments-for-fluentcart'),
             'logo'               => $logo,
             'icon'               => $logo,
             'brand_color'        => '#F7931A',
@@ -74,7 +74,7 @@ class BTCPayGateway extends AbstractPaymentGateway
         }
 
         echo '<div class="fluent-cart-btcpay-redirect"><p>'
-            . esc_html__('You will be redirected to a secure Bitcoin checkout page to complete your payment (on-chain or Lightning).', 'btcpay-for-fluent-cart')
+            . esc_html__('You will be redirected to a secure Bitcoin checkout page to complete your payment (on-chain or Lightning).', 'bitcoin-payments-for-fluentcart')
             . '</p></div>';
     }
 
@@ -92,7 +92,7 @@ class BTCPayGateway extends AbstractPaymentGateway
     {
         wp_send_json([
             'status'       => 'success',
-            'message'      => __('Order info retrieved!', 'btcpay-for-fluent-cart'),
+            'message'      => __('Order info retrieved!', 'bitcoin-payments-for-fluentcart'),
             'payment_args' => [],
         ], 200);
     }
@@ -151,16 +151,16 @@ class BTCPayGateway extends AbstractPaymentGateway
         $webhook_url = site_url('?fluent-cart=fct_payment_listener_ipn&method=btcpay');
 
         return [
-            'title'       => __('Webhook URL', 'btcpay-for-fluent-cart'),
+            'title'       => __('Webhook URL', 'bitcoin-payments-for-fluentcart'),
             'webhook_url' => esc_url($webhook_url),
-            'description' => __('You must create a webhook in your BTCPay Server store so FluentCart gets notified when an invoice is paid.', 'btcpay-for-fluent-cart'),
+            'description' => __('You must create a webhook in your BTCPay Server store so FluentCart gets notified when an invoice is paid.', 'bitcoin-payments-for-fluentcart'),
             'steps'       => [
-                'title' => __('How to configure?', 'btcpay-for-fluent-cart'),
+                'title' => __('How to configure?', 'bitcoin-payments-for-fluentcart'),
                 'list'  => [
-                    __('In your BTCPay Server, go to your Store &rarr; Settings &rarr; Webhooks and click "Create Webhook"', 'btcpay-for-fluent-cart'),
-                    __('Paste the Webhook URL above as the Payload URL', 'btcpay-for-fluent-cart'),
-                    __('Under "Secret", copy the generated secret (click the eye icon to reveal it)', 'btcpay-for-fluent-cart'),
-                    __('Save the webhook in BTCPay, then paste that secret into the "Webhook Secret" field here and save', 'btcpay-for-fluent-cart'),
+                    __('In your BTCPay Server, go to your Store &rarr; Settings &rarr; Webhooks and click "Create Webhook"', 'bitcoin-payments-for-fluentcart'),
+                    __('Paste the Webhook URL above as the Payload URL', 'bitcoin-payments-for-fluentcart'),
+                    __('Under "Secret", copy the generated secret (click the eye icon to reveal it)', 'bitcoin-payments-for-fluentcart'),
+                    __('Save the webhook in BTCPay, then paste that secret into the "Webhook Secret" field here and save', 'bitcoin-payments-for-fluentcart'),
                 ],
             ],
         ];
@@ -170,38 +170,38 @@ class BTCPayGateway extends AbstractPaymentGateway
     {
         return [
             'notice' => [
-                'value' => '<p>' . __('Connect your self-hosted BTCPay Server instance. Create an API key in BTCPay under Account &rarr; Manage Account &rarr; API Keys with the "Create an invoice" and "View invoices" permissions for your store.', 'btcpay-for-fluent-cart') . '</p>',
-                'label' => __('BTCPay Server notice', 'btcpay-for-fluent-cart'),
+                'value' => '<p>' . __('Connect your self-hosted BTCPay Server instance. Create an API key in BTCPay under Account &rarr; Manage Account &rarr; API Keys with the "Create an invoice" and "View invoices" permissions for your store.', 'bitcoin-payments-for-fluentcart') . '</p>',
+                'label' => __('BTCPay Server notice', 'bitcoin-payments-for-fluentcart'),
                 'type'  => 'notice'
             ],
             'host' => [
                 'value'       => '',
-                'label'       => __('BTCPay Server Host', 'btcpay-for-fluent-cart'),
+                'label'       => __('BTCPay Server Host', 'bitcoin-payments-for-fluentcart'),
                 'type'        => 'text',
                 'placeholder' => 'https://btcpay.example.com',
-                'description' => __('The full URL of your BTCPay Server instance, without a trailing slash.', 'btcpay-for-fluent-cart'),
+                'description' => __('The full URL of your BTCPay Server instance, without a trailing slash.', 'bitcoin-payments-for-fluentcart'),
             ],
             'store_id' => [
                 'value'       => '',
-                'label'       => __('Store ID', 'btcpay-for-fluent-cart'),
+                'label'       => __('Store ID', 'bitcoin-payments-for-fluentcart'),
                 'type'        => 'text',
-                'placeholder' => __('Found in BTCPay under Store Settings &rarr; General', 'btcpay-for-fluent-cart'),
+                'placeholder' => __('Found in BTCPay under Store Settings &rarr; General', 'bitcoin-payments-for-fluentcart'),
             ],
             'api_key' => [
                 'value'       => '',
-                'label'       => __('API Key', 'btcpay-for-fluent-cart'),
+                'label'       => __('API Key', 'bitcoin-payments-for-fluentcart'),
                 'type'        => 'password',
-                'placeholder' => __('Greenfield API key', 'btcpay-for-fluent-cart'),
+                'placeholder' => __('Greenfield API key', 'bitcoin-payments-for-fluentcart'),
             ],
             'webhook_secret' => [
                 'value'       => '',
-                'label'       => __('Webhook Secret', 'btcpay-for-fluent-cart'),
+                'label'       => __('Webhook Secret', 'bitcoin-payments-for-fluentcart'),
                 'type'        => 'password',
-                'placeholder' => __('Secret from your BTCPay webhook', 'btcpay-for-fluent-cart'),
+                'placeholder' => __('Secret from your BTCPay webhook', 'bitcoin-payments-for-fluentcart'),
             ],
             'webhook_info' => [
                 'value' => $this->getWebhookInstructions(),
-                'label' => __('Webhook Configuration', 'btcpay-for-fluent-cart'),
+                'label' => __('Webhook Configuration', 'bitcoin-payments-for-fluentcart'),
                 'type'  => 'html_attr'
             ],
         ];
@@ -216,27 +216,27 @@ class BTCPayGateway extends AbstractPaymentGateway
         $host = untrailingslashit(trim((string)Arr::get($data, 'host', '')));
 
         if (!$host) {
-            return self::settingsError(__('The BTCPay Server Host is required.', 'btcpay-for-fluent-cart'));
+            return self::settingsError(__('The BTCPay Server Host is required.', 'bitcoin-payments-for-fluentcart'));
         }
 
         if (!filter_var($host, FILTER_VALIDATE_URL)) {
             return self::settingsError(
-                __('The BTCPay Server Host must be a full URL, e.g. https://btcpay.example.com', 'btcpay-for-fluent-cart')
+                __('The BTCPay Server Host must be a full URL, e.g. https://btcpay.example.com', 'bitcoin-payments-for-fluentcart')
             );
         }
 
         if (!self::isSecureHost($host)) {
             return self::settingsError(
-                __('The BTCPay Server Host must use https:// - your API key is sent on every request and would otherwise travel in the clear.', 'btcpay-for-fluent-cart')
+                __('The BTCPay Server Host must use https:// - your API key is sent on every request and would otherwise travel in the clear.', 'bitcoin-payments-for-fluentcart')
             );
         }
 
         if (!trim((string)Arr::get($data, 'store_id', ''))) {
-            return self::settingsError(__('The BTCPay Store ID is required.', 'btcpay-for-fluent-cart'));
+            return self::settingsError(__('The BTCPay Store ID is required.', 'bitcoin-payments-for-fluentcart'));
         }
 
         if (!trim((string)Arr::get($data, 'api_key', ''))) {
-            return self::settingsError(__('A BTCPay Greenfield API key is required.', 'btcpay-for-fluent-cart'));
+            return self::settingsError(__('A BTCPay Greenfield API key is required.', 'bitcoin-payments-for-fluentcart'));
         }
 
         return $data;
