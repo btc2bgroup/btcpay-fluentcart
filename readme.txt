@@ -143,5 +143,5 @@ attempts and their responses.
 
 == Changelog ==
 
-= 0.0.10 =
+= 0.0.11 =
 * First submitted version after testing.
