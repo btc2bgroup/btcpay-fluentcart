@@ -7,9 +7,8 @@
  * Author: BTC2B Group
  * Author URI: https://btc2bgroup.com
  * Text Domain: bitcoin-payments-for-fluentcart
- * Domain Path: /languages
  * Requires at least: 5.6
- * Tested up to: 6.9
+ * Tested up to: 7.1
  * Requires PHP: 7.4
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
