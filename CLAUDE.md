@@ -70,8 +70,8 @@ btcpay-for-fluent-cart/
   PHP 7.4 + 8.4 and runs PHPUnit on PHP 8.3 + 8.4.
 - Release: push a `v*` tag (e.g. `git tag v1.0.1 && git push origin v1.0.1`) —
   `.github/workflows/release.yml` verifies the tag matches the plugin header version,
-  `BTCPAY_FCT_VERSION`, and readme.txt `Stable tag`, runs the tests, builds an installable
-  plugin zip (only `btcpay-for-fluent-cart.php`, `readme.txt`, `includes/`, `assets/` under a
+  `BTCPAY_FCT_VERSION`, and README.md `Stable tag`, runs the tests, builds an installable
+  plugin zip (only `btcpay-for-fluent-cart.php`, `README.md`, `includes/`, `assets/` under a
   top-level `btcpay-for-fluent-cart/` folder), and attaches it to a GitHub Release. Bump all
   three version strings before tagging.
 - Version bump: `bin/bump-version.sh 1.0.1` (or `composer bump -- 1.0.1`) rewrites all three
