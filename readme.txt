@@ -61,7 +61,6 @@ software; its project terms and documentation are available at:
 
 * Website: https://btcpayserver.org/
 * Documentation: https://docs.btcpayserver.org/
-* Privacy policy: https://btcpayserver.org/privacy/
 * Source: https://github.com/btcpayserver/btcpayserver
 
 == Installation ==
