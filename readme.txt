@@ -4,7 +4,7 @@ Tags: bitcoin, lightning, btcpay, payment gateway, fluentcart
 Requires at least: 5.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.0.12
+Stable tag: 0.0.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,7 +61,6 @@ software; its project terms and documentation are available at:
 
 * Website: https://btcpayserver.org/
 * Documentation: https://docs.btcpayserver.org/
-* Privacy policy: https://btcpayserver.org/privacy/
 * Source: https://github.com/btcpayserver/btcpayserver
 
 == Installation ==
