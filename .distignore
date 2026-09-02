@@ -1,0 +1,24 @@
+# Everything here is excluded from the WordPress.org SVN trunk/tag build.
+# Keep in sync with the zip contents built by .github/workflows/release.yml:
+# only bitcoin-payments-for-fluentcart.php, readme.txt, LICENSE, includes/ and assets/ ship.
+
+.git
+.github
+.idea
+.claude
+.wordpress-org
+.distignore
+.gitignore
+.gitattributes
+.DS_Store
+.phpunit.cache
+.phpunit.result.cache
+bin
+tests
+vendor
+composer.json
+composer.lock
+phpunit.xml
+CLAUDE.md
+SECURITY.md
+btcpay-fluentcart-build-instructions.md
