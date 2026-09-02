@@ -142,6 +142,6 @@ attempts and their responses.
 
 == Changelog ==
 
-= 0.0.12 =
-* First submitted version after testing.
+= 0.1.0 =
+* First submitted version after approval.
 * Added the full GPLv2 license text and copyright notice.
