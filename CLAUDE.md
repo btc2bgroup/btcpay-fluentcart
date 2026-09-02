@@ -81,11 +81,16 @@ bitcoin-payments-for-fluentcart/
   the bump and create the `v<version>` tag (it refuses on a dirty tree or an existing tag, and
   never pushes).
 - WordPress.org SVN: `.github/workflows/deploy-wporg.yml` runs when a GitHub Release is published
-  (or manually via workflow_dispatch with a tag), re-checks the version strings, and uses
+  (or manually via workflow_dispatch, optional `ref` input), and uses
   `10up/action-wordpress-plugin-deploy` to push trunk + the `<version>` SVN tag and sync
   `.wordpress-org/` (banners/icon/screenshots) to the SVN `assets/` dir. Needs repo secrets
   `SVN_USERNAME` / `SVN_PASSWORD` (WordPress.org account, not a token). `.distignore` controls
   what gets copied into SVN — keep it in sync with the zip file list in release.yml.
+  The SVN tag name comes from readme.txt `Stable tag` passed as the action's `VERSION` env var,
+  **not** from the git ref: without it the action falls back to `GITHUB_REF` and a
+  workflow_dispatch run tries to create `tags/refs/heads/main`. The workflow also refuses to run
+  on a ref with no `.distignore`, since the action then silently falls back to `.gitattributes`
+  and ships `tests/`, `bin/` and the composer files.
 - WordPress.org assets/readme only: `.github/workflows/deploy-wporg-assets.yml` runs on pushes to
   `main` that touch `readme.txt` or `.wordpress-org/**` (or manually), and uses
   `10up/action-wordpress-plugin-asset-update` to sync just those into SVN trunk — no version bump,
