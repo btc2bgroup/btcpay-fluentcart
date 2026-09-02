@@ -1,0 +1,41 @@
+name: Deploy to WordPress.org
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy (e.g. v1.0.1)'
+        required: true
+
+jobs:
+  deploy:
+    name: Push tag to WordPress.org SVN
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Check version strings match the tag
+        run: |
+          TAG_VERSION="${{ github.event.inputs.tag || github.ref_name }}"
+          TAG_VERSION="${TAG_VERSION#v}"
+
+          HEADER_VERSION=$(grep -oP '^\s*\*\s*Version:\s*\K[0-9.]+' bitcoin-payments-for-fluentcart.php)
+          CONST_VERSION=$(grep -oP "define\('BTCPAY_FCT_VERSION',\s*'\K[0-9.]+" bitcoin-payments-for-fluentcart.php)
+          STABLE_TAG=$(grep -oP '^Stable tag:\s*\K[0-9.]+' readme.txt)
+
+          if [ "$HEADER_VERSION" != "$TAG_VERSION" ] || [ "$CONST_VERSION" != "$TAG_VERSION" ] || [ "$STABLE_TAG" != "$TAG_VERSION" ]; then
+            echo "::error::Version mismatch - header=$HEADER_VERSION const=$CONST_VERSION stable tag=$STABLE_TAG, expected $TAG_VERSION."
+            exit 1
+          fi
+
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: bitcoin-payments-for-fluentcart
+          ASSETS_DIR: .wordpress-org

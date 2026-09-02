@@ -7,8 +7,8 @@ Please upgrade to the newest release before reporting an issue.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.0.13  | ✅        |
-| < 0.0.13 | ❌        |
+| 0.1.0   | ✅        |
+| < 0.1.0 | ❌        |
 
 ## Reporting a vulnerability
 

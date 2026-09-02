@@ -80,6 +80,19 @@ bitcoin-payments-for-fluentcart/
   bad substitution fails locally instead of after the tag is pushed. Add `--tag` to also commit
   the bump and create the `v<version>` tag (it refuses on a dirty tree or an existing tag, and
   never pushes).
+- WordPress.org SVN: `.github/workflows/deploy-wporg.yml` runs when a GitHub Release is published
+  (or manually via workflow_dispatch with a tag), re-checks the version strings, and uses
+  `10up/action-wordpress-plugin-deploy` to push trunk + the `<version>` SVN tag and sync
+  `.wordpress-org/` (banners/icon/screenshots) to the SVN `assets/` dir. Needs repo secrets
+  `SVN_USERNAME` / `SVN_PASSWORD` (WordPress.org account, not a token). `.distignore` controls
+  what gets copied into SVN — keep it in sync with the zip file list in release.yml.
+- WordPress.org assets/readme only: `.github/workflows/deploy-wporg-assets.yml` runs on pushes to
+  `main` that touch `readme.txt` or `.wordpress-org/**` (or manually), and uses
+  `10up/action-wordpress-plugin-asset-update` to sync just those into SVN trunk — no version bump,
+  no tag. Use it for banner/icon/screenshot changes and readme-only edits (description, FAQ,
+  `Tested up to`). It rewrites trunk's readme.txt, so never let `Stable tag` there point at a
+  version that has no SVN tag yet: ship the code with deploy-wporg.yml first, then readme tweaks.
+  Same `SVN_USERNAME` / `SVN_PASSWORD` secrets.
 - Changelog: readme.txt is the WordPress.org-facing readme — the directory parses it and ignores
   README.md, so there is no README.md. Add a `== Changelog ==` entry (and `== Upgrade Notice ==`
   when relevant) by hand when releasing; the bump script does not write those.
